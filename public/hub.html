@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sensor Game Hub</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
+        #qr-code { margin: 20px; }
+        #session-id { font-size: 1.2em; font-weight: bold; }
+        #status { margin-top: 10px; }
+        .game-list { margin-top: 20px; }
+        .game-item { margin: 10px; padding: 10px; border: 1px solid #ccc; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Sensor Game Hub</h1>
+    <div id="session-info">
+        <p>Scan the QR code with your mobile device to connect.</p>
+        <div id="qr-code"></div>
+        <p id="session-id"></p>
+    </div>
+    <div id="status">Status: Waiting for controller...</div>
+    <div class="game-list">
+        <h2>Select a Game</h2>
+        <div class="game-item" onclick="selectGame('game1.html')">Game 1 (Solo)</div>
+        <div class="game-item" onclick="selectGame('game2.html')">Game 2 (Multiplayer)</div>
+        <div class="game-item" onclick="selectGame('game3.html')">Game 3 (Dual Sensor)</div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/hub.js"></script>
+</body>
+</html>

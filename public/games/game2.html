@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game 2 - Multiplayer</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        #game-container { width: 500px; height: 500px; border: 1px solid black; margin: 20px auto; position: relative; }
+        .player { width: 50px; height: 50px; position: absolute; }
+    </style>
+</head>
+<body>
+    <h1>Game 2 - Multiplayer</h1>
+    <div id="game-container"></div>
+    <a href="/hub.html">Back to Hub</a>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../js/session.js"></script>
+    <script>
+        const socket = io();
+        const gameContainer = document.getElementById('game-container');
+        const sessionId = session.getSessionId();
+        const players = {};
+
+        if (sessionId) {
+            socket.emit('join-session', sessionId);
+        }
+
+        socket.on('controller-joined', (controllerId) => {
+            const playerElement = document.createElement('div');
+            playerElement.id = controllerId;
+            playerElement.className = 'player';
+            playerElement.style.backgroundColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+            gameContainer.appendChild(playerElement);
+            players[controllerId] = playerElement;
+        });
+
+        socket.on('controller-left', (controllerId) => {
+            const playerElement = document.getElementById(controllerId);
+            if (playerElement) {
+                gameContainer.removeChild(playerElement);
+                delete players[controllerId];
+            }
+        });
+
+        socket.on('sensor-update', (data) => {
+            const playerElement = players[data.mobileSocketId];
+            if (playerElement) {
+                const { x, y } = data.acceleration;
+                const left = Math.max(0, Math.min(450, playerElement.offsetLeft + x));
+                const top = Math.max(0, Math.min(450, playerElement.offsetTop - y));
+                playerElement.style.left = `${left}px`;
+                playerElement.style.top = `${top}px`;
+            }
+        });
+    </script>
+</body>
+</html>
