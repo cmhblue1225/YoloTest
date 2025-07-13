@@ -23,7 +23,8 @@ io.on('connection', (socket) => {
             mode: 'solo'
         };
         socket.join(sessionId);
-        socket.emit('session-created', sessionId);
+        const publicUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+        socket.emit('session-created', { sessionId, publicUrl });
         console.log(`Session created: ${sessionId}`);
     });
 

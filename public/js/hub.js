@@ -11,12 +11,13 @@ if (sessionId) {
     socket.emit('create-session');
 }
 
-socket.on('session-created', (newSessionId) => {
-    sessionId = newSessionId;
+socket.on('session-created', (data) => {
+    sessionId = data.sessionId;
+    const publicUrl = data.publicUrl;
     session.setSessionId(sessionId);
     sessionIdElement.textContent = `Session ID: ${sessionId}`;
     new QRCode(qrCodeElement, {
-        text: `${window.location.origin}/sensor.html?sessionId=${sessionId}`,
+        text: `${publicUrl}/sensor.html?sessionId=${sessionId}`,
         width: 128,
         height: 128,
     });
